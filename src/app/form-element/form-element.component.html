@@ -1,0 +1,59 @@
+<div class="flex" *ngIf="selectedGroup">
+  <div class="w-2/3 mx-6">
+    <app-group-header-section
+      [title]="selectedGroup.title"
+      [description]="selectedGroup.description"></app-group-header-section>
+
+    <br>
+
+    <div class="bg-white shadow-lg rounded-lg p-4 border border-gray-200 hover:shadow-xl transition">
+      <div class="flex justify-between items-center"
+        cdkDropList
+        #fieldList="cdkDropList"
+        (cdkDropListDropped)="drop($event)">
+        <div  *ngFor="let field of formFields" class="w-full max-w-md px-3 py-1 rounded-lg bg-white shadow-sm border-none" cdkDrag>
+          <div class="flex items-center space-x-4">
+            {{field.label}}
+          </div>
+        </div>
+        <div *ngIf="formFields.length == 0" cdkDrag>
+          Please Insert Fields
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="w-1/3 px-1 pt-1 bg-white h-screen">
+    <div class="ttile-element text-lg p-2">Elements</div>
+
+    <input type="text"
+      placeholder="Search"
+      class="w-full px-2 py-1 mb-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      [(ngModel)]="filterText"
+      (ngModelChange)="onFilterChange()" />
+    <hr>
+    <ng-container *ngFor="let group of fieldGroups">
+      <div class="ttile-element text-md p-2 font-medium">{{ group.group | uppercase }}</div>
+      <div cdkDropList
+        [cdkDropListConnectedTo]="[fieldList]">
+        <div  *ngFor="let field of group.fields" class="w-full max-w-md px-3 py-1 rounded-lg bg-white shadow-sm border-none"
+          cdkDrag
+          [cdkDragData]="field">
+          <div class="flex items-center space-x-4">
+            <!-- Left side icon -->
+            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-md bg-gray-100">
+              <i class="text-gray-600" [className]="field.iconClass"></i>
+            </div>
+            <!-- Right side text content -->
+            <div class="flex-1">
+              <div class="text-base font-medium text-gray-900 mb-0">{{ field.label }}</div>
+              <div class="text-sm text-gray-500">{{ field.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </ng-container>
+  </div>
+</div>
