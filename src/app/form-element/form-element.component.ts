@@ -1,7 +1,7 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { FieldDetailModelComponent } from './field-detail-model/field-detail-model.component';
 import { MatDialog } from '@angular/material/dialog';
-import { UpdateFieldDetailModelComponent } from './update-field-detail-model/update-field-detail-model.component';
 
 @Component({
   selector: 'app-form-element',
@@ -10,8 +10,11 @@ import { UpdateFieldDetailModelComponent } from './update-field-detail-model/upd
 })
 export class FormElementComponent {
 
-  selectedGroup:any;
+  @Output() updateFilds = new EventEmitter<any>();
+  @Output() updateGroupDetails = new EventEmitter<any>();
+  @Output() deleteGroupDetails = new EventEmitter<any>();
 
+  selectedGroup:any;
   filterText:any;
 
   fieldGroups:any[] =[
@@ -28,14 +31,14 @@ export class FormElementComponent {
       fields:[
         {label:"Date",type:"date",description:"Select date from datepicker",iconClass:'fa fa-calendar'},
         {label:"Time",type:"time",description:"Select time from timepicker",iconClass:'fa fa-clock-o'},
-        {label:"Date & Time",type:"datetime",description:"Select date and time from picker",iconClass:'fa fa-calendar-plus-o'}
+        {label:"Date & Time",type:"date-time",description:"Select date and time from picker",iconClass:'fa fa-calendar-plus-o'}
       ]
     },
     {
       group:'Multi',
       fields:[
         {label:"Single Selection",type:"radio",description:"Select single option",iconClass:'fa fa-dot-circle-o'},
-        {label:"Multi Selection",type:"checkox",description:"Select multiple options",iconClass:'fa fa-check-square'},
+        {label:"Multi Selection",type:"checkbox",description:"Select multiple options",iconClass:'fa fa-check-square'},
         {label:"Dropdown",type:"select",description:"Select options from dropdown",iconClass:'fa fa-list'}
       ]
     },
@@ -49,26 +52,44 @@ export class FormElementComponent {
 
   formFields:any[] = [];
 
-
-  
-  constructor(private cd: ChangeDetectorRef, private dialog: MatDialog){}
-
+  constructor(private cd: ChangeDetectorRef, public dialog: MatDialog){}
   updateSelectGroup(group:any){
     this.selectedGroup = group;
+    this.formFields = (group.fields)?group.fields:[];
     this.cd.detectChanges();
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    console.log(event);
-    console.log(event.item.data)
+    if(event.previousContainer.id != event.container.id){
+      const dialogRef = this.dialog.open(FieldDetailModelComponent,{
+        data:{ type:event.item.data.type }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+          this.formFields.push({ label: result.data.label, description: result.data.description, type:event.item.data.type, options:result.data.options });
+          this.updateFilds.emit(this.formFields)
+        }
+      });
+    } else moveItemInArray(this.formFields, event.previousIndex, event.currentIndex);
 
-    let dialogRef = this.dialog.open(UpdateFieldDetailModelComponent, {
-      width: '640px',
-      disableClose: true,
-      data: {dataType:event.item.data.type}
-    });
   }
 
+  updateFieldDetails(fieldDetails:any, index:number){
+    this.formFields[index] = fieldDetails;
+    this.updateFilds.emit(this.formFields)
+  }
+
+  deleteFieldDetails(index:number){
+    this.formFields.splice(index,1);
+  }
+
+  updateGroup(groupDetails:any){
+    this.updateGroupDetails.emit(groupDetails);
+  }
+
+  deleteGroup(){
+    this.deleteGroupDetails.emit();
+  }
 
   onFilterChange(){
 

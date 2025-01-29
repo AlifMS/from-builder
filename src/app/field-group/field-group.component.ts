@@ -1,4 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { UpdateGroupModelComponent } from '../update-group-model/update-group-model.component';
 
 @Component({
   selector: 'app-field-group',
@@ -7,22 +9,20 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class FieldGroupComponent implements OnInit{
 
-  groups = [
-    { title:'AMC Reports', description:'test description'},
-    { title:'HVAC Repair', description:'test description'},
-    { title:'AMC Yearly', description:'test description'},
-    { title:'AMC Installations - Tier 3', description:'test description'},
-    { title:'Service Request', description:'test description'},
-    { title:'Maintenance', description:'test description'},
-  ];
-  filteredGroups = [...this.groups];
+  @Input() groups:any[] = [];
+
+  filteredGroups:any[] = [];
   filterText = '';
 
   selectedGroup:any;
 
   @Output() selectGroup:EventEmitter<any> = new EventEmitter<any>();
+  @Output() addNewGroup:EventEmitter<any> = new EventEmitter<any>();
+
+  constructor(public dialog: MatDialog){}
 
   ngOnInit(): void {
+    this.filteredGroups = [... this.groups]
     this.select(this.groups[0])
   }
 
@@ -38,4 +38,15 @@ export class FieldGroupComponent implements OnInit{
     this.selectedGroup = group;
     this.selectGroup.emit(group);
   }
+
+  createGroup(){
+    const dialogRef = this.dialog.open(UpdateGroupModelComponent,{ data:null });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        this.addNewGroup.emit(result.data);
+        this.onFilterChange();
+      }
+    });
+  }
+
 }

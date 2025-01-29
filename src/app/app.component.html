@@ -2,6 +2,9 @@
 
 <div class="flex">
   <app-field-group class="w-1/4"
-    (selectGroup)="selectGroup($event)"></app-field-group>
-  <app-form-element class="w-3/4 h-screen bg-slate-50"></app-form-element>
+    [groups]="groups"
+    (selectGroup)="selectGroup($event)"
+    (addNewGroup)="addNewGroup($event)"></app-field-group>
+  <app-form-element class="w-3/4 h-screen bg-slate-50"
+    (updateFilds)="updatedata($event)"></app-form-element>
 </div>

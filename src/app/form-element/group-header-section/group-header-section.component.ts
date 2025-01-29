@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { UpdateGroupModelComponent } from 'src/app/update-group-model/update-group-model.component';
 
 @Component({
   selector: 'app-group-header-section',
@@ -9,12 +11,22 @@ export class GroupHeaderSectionComponent {
   @Input() title: string = '';
   @Input() description: string = '';
 
+  @Output() updateGroup = new EventEmitter<any>()
+  @Output() deleteGroup = new EventEmitter<any>()
 
+  constructor(public dialog: MatDialog){}
 
-  edit(){}
+  edit(){
+    const dialogRef = this.dialog.open(UpdateGroupModelComponent,{ data:{ title:this.title, description:this.description }})
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        this.updateGroup.emit(result.data);
+      }
+    });
+  }
 
-  copy(){}
-
-  delete(){}
+  delete(){
+    this.deleteGroup.emit();
+  }
 
 }
