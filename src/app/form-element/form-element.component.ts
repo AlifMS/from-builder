@@ -66,7 +66,7 @@ export class FormElementComponent {
       });
       dialogRef.afterClosed().subscribe(result => {
         if(result){
-          this.formFields.push({ label: result.data.label, description: result.data.description, type:event.item.data.type, options:result.data.options });
+          this.formFields.push({ label: result.data.label,placeholder:result.data.placeholder, description: result.data.description, type:event.item.data.type, options:result.data.options });
           this.updateFilds.emit(this.formFields)
         }
       });
@@ -88,7 +88,6 @@ export class FormElementComponent {
   }
 
   deleteGroup(){
-    console.log("delete")
     this.deleteGroupDetails.emit();
   }
 

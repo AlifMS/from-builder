@@ -26,7 +26,14 @@ export class FieldGroupComponent implements OnInit{
     this.select(this.groups[0])
   }
 
+  /**
+   * Updates the `filteredGroups` array based on the current `filterText`.
+   * If `filterText` is not empty, it filters the `groups` array to include only
+   * those items whose title includes the `filterText` (case-insensitive).
+   * Otherwise, it copies all items from `groups` to `filteredGroups`.
+   */
   onFilterChange() {
+    console.log(this.groups);
     this.filteredGroups = this.filterText
       ? this.groups.filter(item =>
           item.title.toLowerCase().includes(this.filterText.toLowerCase())

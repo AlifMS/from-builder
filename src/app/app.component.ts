@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormElementComponent } from './form-element/form-element.component';
+import { FieldGroupComponent } from './field-group/field-group.component';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,8 @@ import { FormElementComponent } from './form-element/form-element.component';
 })
 export class AppComponent {
 
-  @ViewChild(FormElementComponent) formElement!:FormElementComponent
+  @ViewChild(FormElementComponent) formElement!:FormElementComponent;
+  @ViewChild(FieldGroupComponent) fieldGroup!:FieldGroupComponent;
 
   groups = [
     {
@@ -51,7 +53,6 @@ export class AppComponent {
   }
 
   updateGroupDetails(group:any){
-    console.log(group);
     const index = this.groups.findIndex(ele => ele.title == this.selectedGroup.title);
     this.groups[index].title = group.title;
     this.groups[index].description = group.description;
@@ -59,6 +60,8 @@ export class AppComponent {
 
   deleteGroupDetails(){
     const index = this.groups.findIndex(ele => ele.title == this.selectedGroup.title);
-    console.log(index);
+    this.groups.splice(index, 1);
+    this.fieldGroup.onFilterChange();
+    this.selectGroup(this.groups[0]);
   }
 }

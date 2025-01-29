@@ -26,6 +26,7 @@ export class GroupHeaderSectionComponent {
   }
 
   delete(){
+    console.log("delete")
     this.deleteGroup.emit();
   }
 

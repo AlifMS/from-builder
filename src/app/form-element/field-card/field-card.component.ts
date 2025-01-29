@@ -24,7 +24,7 @@ export class FieldCardComponent {
     dialogRef.afterClosed().subscribe(result => {
       if(result){
         console.log(result);
-        this.updateFieldDetails.emit({ label: result.data.label, description: result.data.description, type:this.field.type, options:result.data.options })
+        this.updateFieldDetails.emit({ label: result.data.label,placeholder:result.data.placeholder, description: result.data.description, type:this.field.type, options:result.data.options })
       }
     });
   }
