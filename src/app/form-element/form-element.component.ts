@@ -88,6 +88,7 @@ export class FormElementComponent {
   }
 
   deleteGroup(){
+    console.log("delete")
     this.deleteGroupDetails.emit();
   }
 

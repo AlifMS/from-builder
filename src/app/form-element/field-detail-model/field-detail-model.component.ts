@@ -12,6 +12,7 @@ export class FieldDetailModelComponent implements OnInit{
   form: FormGroup = this.fb.group({
     label: ['', Validators.required],
     description: [''],
+    placeholder:[''],
     type: ['', Validators.required],
     options: this.fb.array([]) // FormArray for dynamic options
   });
